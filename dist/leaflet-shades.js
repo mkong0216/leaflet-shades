@@ -1917,7 +1917,147 @@
 
 }, window));
 
-},{"leaflet":2}],2:[function(require,module,exports){
+},{"leaflet":3}],2:[function(require,module,exports){
+'use strict';
+
+/* A Draggable that does not update the element position
+and takes care of only bubbling to targetted path in Canvas mode. */
+L.PathDraggable = L.Draggable.extend({
+
+  initialize: function (path) {
+    this._path = path;
+    this._canvas = (path._map.getRenderer(path) instanceof L.Canvas);
+    var element = this._canvas ? this._path._map.getRenderer(this._path)._container : this._path._path;
+    L.Draggable.prototype.initialize.call(this, element, element, true);
+  },
+
+  _updatePosition: function () {
+    var e = {originalEvent: this._lastEvent};
+    this.fire('drag', e);
+  },
+
+  _onDown: function (e) {
+    var first = e.touches ? e.touches[0] : e;
+    this._startPoint = new L.Point(first.clientX, first.clientY);
+    if (this._canvas && !this._path._containsPoint(this._path._map.mouseEventToLayerPoint(first))) { return; }
+    L.Draggable.prototype._onDown.call(this, e);
+  }
+
+});
+
+
+L.Handler.PathDrag = L.Handler.extend({
+
+  initialize: function (path) {
+    this._path = path;
+  },
+
+  getEvents: function () {
+    return {
+      dragstart: this._onDragStart,
+      drag: this._onDrag,
+      dragend: this._onDragEnd
+    };
+  },
+
+  addHooks: function () {
+    if (!this._draggable) { this._draggable = new L.PathDraggable(this._path); }
+    this._draggable.on(this.getEvents(), this).enable();
+    L.DomUtil.addClass(this._draggable._element, 'leaflet-path-draggable');
+  },
+
+  removeHooks: function () {
+    this._draggable.off(this.getEvents(), this).disable();
+    L.DomUtil.removeClass(this._draggable._element, 'leaflet-path-draggable');
+  },
+
+  moved: function () {
+    return this._draggable && this._draggable._moved;
+  },
+
+  _onDragStart: function () {
+    this._startPoint = this._draggable._startPoint;
+    this._path
+        .closePopup()
+        .fire('movestart')
+        .fire('dragstart');
+  },
+
+  _onDrag: function (e) {
+    var path = this._path,
+        event = (e.originalEvent.touches && e.originalEvent.touches.length === 1 ? e.originalEvent.touches[0] : e.originalEvent),
+        newPoint = L.point(event.clientX, event.clientY),
+        latlng = path._map.layerPointToLatLng(newPoint);
+
+    this._offset = newPoint.subtract(this._startPoint);
+    this._startPoint = newPoint;
+
+    this._path.eachLatLng(this.updateLatLng, this);
+    path.redraw();
+
+    e.latlng = latlng;
+    e.offset = this._offset;
+    path.fire('drag', e);
+    e.latlng = this._path.getCenter ? this._path.getCenter() : this._path.getLatLng();
+    path.fire('move', e);
+  },
+
+  _onDragEnd: function (e) {
+    if (this._path._bounds) this.resetBounds();
+    this._path.fire('moveend')
+        .fire('dragend', e);
+  },
+
+  latLngToLayerPoint: function (latlng) {
+    // Same as map.latLngToLayerPoint, but without the round().
+    var projectedPoint = this._path._map.project(L.latLng(latlng));
+    return projectedPoint._subtract(this._path._map.getPixelOrigin());
+  },
+
+  updateLatLng: function (latlng) {
+    var oldPoint = this.latLngToLayerPoint(latlng);
+    oldPoint._add(this._offset);
+    var newLatLng = this._path._map.layerPointToLatLng(oldPoint);
+    latlng.lat = newLatLng.lat;
+    latlng.lng = newLatLng.lng;
+  },
+
+  resetBounds: function () {
+    this._path._bounds = new L.LatLngBounds();
+    this._path.eachLatLng(function (latlng) {
+      this._bounds.extend(latlng);
+    });
+  }
+
+});
+
+L.Path.include({
+
+  eachLatLng: function (callback, context) {
+    context = context || this;
+    var loop = function (latlngs) {
+      for (var i = 0; i < latlngs.length; i++) {
+        if (L.Util.isArray(latlngs[i])) loop(latlngs[i]);
+        else callback.call(context, latlngs[i]);
+      }
+    };
+    loop(this.getLatLngs ? this.getLatLngs() : [this.getLatLng()]);
+  }
+
+});
+
+L.Path.addInitHook(function () {
+
+  this.dragging = new L.Handler.PathDrag(this);
+  if (this.options.draggable) {
+    this.once('add', function () {
+      this.dragging.enable();
+    });
+  }
+
+});
+
+},{}],3:[function(require,module,exports){
 /* @preserve
  * Leaflet 1.2.0, a JS library for interactive maps. http://leafletjs.com
  * (c) 2010-2017 Vladimir Agafonkin, (c) 2010-2011 CloudMade
@@ -15528,19 +15668,20 @@ exports.map = createMap;
 })));
 
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 (function (global){
 var L = (typeof window !== "undefined" ? window['L'] : typeof global !== "undefined" ? global['L'] : null);
 require('leaflet-editable');
+require('leaflet.path.drag');
 
 var LeafletShades = L.Layer.extend({
 
 	initialize: function(options) {
-		map.on('editable:drawing:commit', this.onDrawingFinished.bind(this));
 	},
 
 	onAdd: function(map) {
 		this._map = map;
+		this._addEventListeners();
 
 		this._shadesContainer = L.DomUtil.create('div', 'leaflet-areaselect-container leaflet-zoom-hide');
 		this._topShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
@@ -15551,35 +15692,81 @@ var LeafletShades = L.Layer.extend({
 		map.getPanes().overlayPane.appendChild(this._shadesContainer);
 	},
 
-	onDrawingFinished: function(event) {
-		var bounds = event.layer.getBounds();
-		// this._updateShades(bounds).bind(this);
+	_addEventListeners: function() {
+		this._map.on('editable:drawing:commit', this._onBoundsChanged.bind(this));
+		this._map.on('editable:vertex:dragend', this._onBoundsChanged.bind(this));
+  		this._map.on('editable:dragend', this._onBoundsChanged.bind(this));
+  		this._map.on('moveend', this._updatedMapPosition.bind(this));
 	},
 
-	// _updateShades: function (bounds) {
-	// 	var size = map.getSize();
-	// 	var northEastPoint = map.latLngToContainerPoint(bounds.getNorthEast());
-	// 	var southWestPoint = map.latLngToContainerPoint(bounds.getSouthWest());
+	_onBoundsChanged: function (event) {
+		var bounds = event.layer.getBounds();
+		this._updateShades(bounds);
+	}, 
 
-	// 	this._setDimensions(this._topShade, {
-	//     width: size.x,
-	//     height: (northEastPoint.y < 0) ? 0 : northEastPoint.y,
-	//     top: 0,
-	//     left: 0
-	//   })
+	_updatedMapPosition: function(event) {
+		this._updateShades(this._bounds);
+	},
 
-	// }
+	_getOffset: function() {
+  		// Getting the transformation value through style attributes
+  		var transformation = this._map.getPanes().mapPane.style.transform
+  		var startIndex = transformation.indexOf('(')
+  		var endIndex = transformation.indexOf(')')
+  		transformation = transformation.substring(startIndex + 1, endIndex).split(',')
+		var offset = {
+			x: Number(transformation[0].slice(0, -2) * -1),
+		    y: Number(transformation[1].slice(0, -2) * -1)
+		}
+  		return offset
+	},
 
-	// _setDimensions: function(element, dimensions) {
-	// 	element.style.width = dimensions.width + 'px';
-	//   element.style.height = dimensions.height + 'px';
-	//   element.style.top = dimensions.top + 'px';
-	//   element.style.left = dimensions.left + 'px';
-	// }
+	_updateShades: function (bounds) {
+		this._bounds = bounds; 
+		var size = this._map.getSize();
+		var northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
+		var southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());
+		var offset = this._getOffset();
+
+		this._setDimensions(this._topShade, {
+		    width: size.x,
+		    height: (northEastPoint.y < 0) ? 0 : northEastPoint.y,
+		    top: offset.y,
+		    left: offset.x
+	  	})
+
+	  	this._setDimensions(this._bottomShade, {
+		    width: size.x,
+		    height: size.y - southWestPoint.y,
+		    top: southWestPoint.y + offset.y,
+		    left: offset.x
+		})
+
+		this._setDimensions(this._leftShade, {
+		    width: (southWestPoint.x < 0) ? 0 : southWestPoint.x,
+		    height: southWestPoint.y - northEastPoint.y,
+		    top: northEastPoint.y + offset.y,
+		    left: offset.x
+		})
+
+		this._setDimensions(this._rightShade, {
+		    width: size.x - northEastPoint.x,
+		    height: southWestPoint.y - northEastPoint.y,
+		    top: northEastPoint.y + offset.y,
+		    left: northEastPoint.x + offset.x
+		})
+	},
+
+	_setDimensions: function(element, dimensions) {
+		element.style.width = dimensions.width + 'px';
+		element.style.height = dimensions.height + 'px';
+		element.style.top = dimensions.top + 'px';
+		element.style.left = dimensions.left + 'px';
+	}
 
 })
 
 window.LeafletShades = LeafletShades;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"leaflet-editable":1}]},{},[3]);
+},{"leaflet-editable":1,"leaflet.path.drag":2}]},{},[4]);
