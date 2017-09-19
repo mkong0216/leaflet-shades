@@ -5,8 +5,8 @@
   "main": "leaflet-shades.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "watchify  ./src/leaflet-shades.js -o dist/leaflet-shades.js -v;",
-    "build": "browserify ./src/leaflet-shades.js > dist/leaflet-shades.js"
+    "dev": "watchify  ./src/js/leaflet-shades.js -o dist/leaflet-shades.js -v;",
+    "build": "browserify ./src/js/leaflet-shades.js > dist/leaflet-shades.js"
   },
   "repository": {
     "type": "git",

@@ -38,11 +38,11 @@ var LeafletShades = L.Layer.extend({
 
 	_getOffset: function() {
   		// Getting the transformation value through style attributes
-  		var transformation = this._map.getPanes().mapPane.style.transform
-  		var startIndex = transformation.indexOf('(')
-  		var endIndex = transformation.indexOf(')')
+  		let transformation = this._map.getPanes().mapPane.style.transform
+  		const startIndex = transformation.indexOf('(')
+  		const endIndex = transformation.indexOf(')')
   		transformation = transformation.substring(startIndex + 1, endIndex).split(',')
-		var offset = {
+		const offset = {
 			x: parseInt(transformation[0], 10) * -1, //Number(transformation[0].slice(0, -2) * -1),
 		    y: parseInt(transformation[1], 10) * -1 //Number(transformation[1].slice(0, -2) * -1)
 		}
@@ -50,11 +50,11 @@ var LeafletShades = L.Layer.extend({
 	},
 
 	_updateShades: function (bounds) {
-		this._bounds = bounds; 
-		var size = this._map.getSize();
-		var northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
-		var southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());
-		var offset = this._getOffset();
+		if (bounds !== this._bounds) this._bounds = bounds; 
+		const size = this._map.getSize();
+		const northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
+		const southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());
+		const offset = this._getOffset();
 
 		this.setDimensions(this._topShade, {
 		    width: size.x,
