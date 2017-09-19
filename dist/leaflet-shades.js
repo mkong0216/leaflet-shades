@@ -15715,8 +15715,8 @@ var LeafletShades = L.Layer.extend({
   		var endIndex = transformation.indexOf(')')
   		transformation = transformation.substring(startIndex + 1, endIndex).split(',')
 		var offset = {
-			x: Number(transformation[0].slice(0, -2) * -1),
-		    y: Number(transformation[1].slice(0, -2) * -1)
+			x: parseInt(transformation[0], 10) * -1, //Number(transformation[0].slice(0, -2) * -1),
+		    y: parseInt(transformation[1], 10) * -1 //Number(transformation[1].slice(0, -2) * -1)
 		}
   		return offset
 	},
