@@ -56,28 +56,28 @@ var LeafletShades = L.Layer.extend({
 		var southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());
 		var offset = this._getOffset();
 
-		this._setDimensions(this._topShade, {
+		this.setDimensions(this._topShade, {
 		    width: size.x,
 		    height: (northEastPoint.y < 0) ? 0 : northEastPoint.y,
 		    top: offset.y,
 		    left: offset.x
 	  	})
 
-	  	this._setDimensions(this._bottomShade, {
+	  	this.setDimensions(this._bottomShade, {
 		    width: size.x,
 		    height: size.y - southWestPoint.y,
 		    top: southWestPoint.y + offset.y,
 		    left: offset.x
 		})
 
-		this._setDimensions(this._leftShade, {
+		this.setDimensions(this._leftShade, {
 		    width: (southWestPoint.x < 0) ? 0 : southWestPoint.x,
 		    height: southWestPoint.y - northEastPoint.y,
 		    top: northEastPoint.y + offset.y,
 		    left: offset.x
 		})
 
-		this._setDimensions(this._rightShade, {
+		this.setDimensions(this._rightShade, {
 		    width: size.x - northEastPoint.x,
 		    height: southWestPoint.y - northEastPoint.y,
 		    top: northEastPoint.y + offset.y,
@@ -85,11 +85,19 @@ var LeafletShades = L.Layer.extend({
 		})
 	},
 
-	_setDimensions: function(element, dimensions) {
+	setDimensions: function(element, dimensions) {
 		element.style.width = dimensions.width + 'px';
 		element.style.height = dimensions.height + 'px';
 		element.style.top = dimensions.top + 'px';
 		element.style.left = dimensions.left + 'px';
+	},
+
+	onRemove: function(map) {
+		map.getPanes().overlayPane.removeChild(this._shadesContainer);
+		map.off('editable:drawing:commit', this._onBoundsChanged.bind(this));
+		map.off('editable:vertex:dragend', this._onBoundsChanged.bind(this));
+  		map.off('editable:dragend', this._onBoundsChanged.bind(this));
+  		map.off('moveend', this._updatedMapPosition.bind(this));
 	}
 
 })
