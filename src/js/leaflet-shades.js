@@ -2,7 +2,7 @@ var L = require('leaflet');
 require('leaflet-editable');
 require('leaflet.path.drag');
 
-var LeafletShades = L.Layer.extend({
+L.LeafletShades = L.Layer.extend({
 
 	initialize: function(options) {
 	},
@@ -43,8 +43,8 @@ var LeafletShades = L.Layer.extend({
   		const endIndex = transformation.indexOf(')')
   		transformation = transformation.substring(startIndex + 1, endIndex).split(',')
 		const offset = {
-			x: parseInt(transformation[0], 10) * -1, //Number(transformation[0].slice(0, -2) * -1),
-		    y: parseInt(transformation[1], 10) * -1 //Number(transformation[1].slice(0, -2) * -1)
+			x: parseInt(transformation[0], 10) * -1,
+		    y: parseInt(transformation[1], 10) * -1 
 		}
   		return offset
 	},
@@ -99,7 +99,10 @@ var LeafletShades = L.Layer.extend({
   		map.off('editable:dragend', this._onBoundsChanged.bind(this));
   		map.off('moveend', this._updatedMapPosition.bind(this));
 	}
-
 })
 
-window.LeafletShades = LeafletShades;
+L.leafletShades = function(options) {
+	return new L.LeafletShades(options); 
+}; 
+
+window.LeafletShades = L.LeafletShades;
