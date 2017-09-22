@@ -15674,7 +15674,7 @@ var L = (typeof window !== "undefined" ? window['L'] : typeof global !== "undefi
 require('leaflet-editable');
 require('leaflet.path.drag');
 
-L.LeafletShades = L.Layer.extend({
+var LeafletShades = L.Layer.extend({
 
 	initialize: function(options) {
 	},
@@ -15771,13 +15771,10 @@ L.LeafletShades = L.Layer.extend({
   		map.off('editable:dragend', this._onBoundsChanged.bind(this));
   		map.off('moveend', this._updatedMapPosition.bind(this));
 	}
-})
+});
 
-L.leafletShades = function(options) {
-	return new L.LeafletShades(options); 
-}; 
 
-window.LeafletShades = L.LeafletShades;
+module.exports = LeafletShades;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"leaflet-editable":1,"leaflet.path.drag":2}]},{},[4]);
