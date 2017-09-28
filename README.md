@@ -12,7 +12,7 @@ Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the plugin 
 <h1> Basic Usage: </h1>
 <b> Step 1: </b> In HTML, import the required Leaflet Javascript and CSS files along with the Javascript and CSS files for the leaflet-shades plugin. 
 
-```
+```html
 <!-- Load Leaflet and Leaflet-Shades stylesheets -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
 <link rel="stylesheet" href="./src/css/leaflet-shades.css" />
@@ -24,7 +24,7 @@ Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the plugin 
 
 <b> Step 2: </b> In Javascript, initialize your Leaflet Map and enable editable in your initialization
 
-```
+```javascript
 var map = L.map('map', {editable: true});
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 map.setView([0,0], 5);
@@ -37,7 +37,7 @@ map.editTools.startRectangle();
 
 <b> Step 4: </b> In Javascript, create your shades and add it onto your map 
 
-```
+```javascript
 var shades = new LeafletShades();
 shades.addTo(map); 
 ```
@@ -47,7 +47,7 @@ Leaflet-Shades only has one public method which is the `setDimensions(element, d
 This method takes an element and an object containing the desired dimensions for this element. 
 For example, if you wanted to manually set the dimensions for the left side of the selected region you can do this:
 
-```
+```javascript
 // Defining the width and height of the shade along with the top and left position of the shade
 var dimensions = {
   width: 500,
