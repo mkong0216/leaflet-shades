@@ -56,7 +56,8 @@ var dimensions = {
   left: 10
 }
 
-// Element passed into this method can be either shades._leftShade, shades._rightShade, shades._topShade, or shades._bottomShade 
+// Element passed into this method can be either 
+// shades._leftShade, shades._rightShade, shades._topShade, or shades._bottomShade 
 shades.setDimensions(shades._leftShade, dimensions);
 ```
 This will change the left shade to become 500px by 500px at position 10px from the top and 10px to the left.
