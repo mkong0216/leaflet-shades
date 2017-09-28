@@ -42,6 +42,8 @@ var shades = new LeafletShades();
 shades.addTo(map); 
 ```
 
+Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the finished product. 
+
 <h1> API Documentation: </h1>
 Leaflet-Shades only has one public method which is the `setDimensions(element, dimensions)` method. 
 This method takes an element and an object containing the desired dimensions for this element. 
