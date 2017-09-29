@@ -12,7 +12,13 @@ Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the plugin 
 Supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6
 
 # Basic Usage: 
-<b> Step 1: </b> In HTML, import the required Leaflet Javascript and CSS files along with the Javascript and CSS files for the leaflet-shades plugin. 
+<b> Step 1: </b> Clone the Leaflet Shades repository by doing:
+
+```
+git clone git@github.com:mkong0216/leaflet-shades.git
+```
+
+<b> Step 2: </b> In HTML, import the required Leaflet Javascript and CSS files along with the Javascript and CSS files for the leaflet-shades plugin. 
 
 ```html
 <!-- Load Leaflet and Leaflet-Shades stylesheets -->
@@ -24,7 +30,7 @@ Supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6
 <script src="./dist/leaflet-shades.js"></script>
 ```
 
-<b> Step 2: </b> In Javascript, initialize your Leaflet Map and enable editable in your initialization
+<b> Step 3: </b> In Javascript, initialize your Leaflet Map and enable editable in your initialization
 
 ```javascript
 var map = L.map('map', {editable: true});
@@ -32,12 +38,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 map.setView([0,0], 5);
 ```
 
-<b> Step 3: </b> In Javascript, start drawing your rectangle using Leaflet.Editable 
+<b> Step 4: </b> In Javascript, start drawing your rectangle using Leaflet.Editable 
 ```
 map.editTools.startRectangle();
 ```
 
-<b> Step 4: </b> In Javascript, create your shades and add it onto your map 
+<b> Step 5: </b> In Javascript, create your shades and add it onto your map 
 
 ```javascript
 var shades = new L.LeafletShades();
