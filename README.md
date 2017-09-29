@@ -9,6 +9,8 @@ Using Leaflet shades, the area inside the geometry now has a transparent overlay
 <h1> Requirements </h1>
 Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the plugin and are required. 
 
+Supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6
+
 <h1> Basic Usage: </h1>
 <b> Step 1: </b> In HTML, import the required Leaflet Javascript and CSS files along with the Javascript and CSS files for the leaflet-shades plugin. 
 
@@ -45,6 +47,13 @@ shades.addTo(map);
 ```
 
 Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the finished product. 
+
+<h1> Leaflet Shades as Module </h1>
+You can also install Leaflet Shades as a module by doing:
+
+```
+npm install leaflet-shades
+```
 
 <h1> API Documentation: </h1>
 Leaflet-Shades only has one public method which is the `setDimensions(element, dimensions)` method. 
