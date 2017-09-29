@@ -109,13 +109,13 @@ Leaflet Shades listens to events fired by Leaflet.Editable and Leaflet.
 When the Leaflet.Editable geometry is resized or dragged, Leaflet Shades updates the shades' dimensions. When the Leaflet map is zoomed in/out or panned, Leaflet Shades updates the shades' dimensions as well. 
 
 Leaflet Shades provides the event: 
-'`shades:bounds-changed`' which fires whenever shades' dimensions are updated and allow users to access the new values for the bounds of the selected region through `event.bounds`
+`'shades:bounds-changed'` which fires whenever shades' dimensions are updated and allow users to access the new values for the bounds of the selected region through `event.bounds`
 
 To use the `shades:bounds-changed` event to access the values of the region's bounds, you can do:
 
 ```javascript 
 map.on('shades:bounds-changed', function(event) {
-	var bounds = event.bounds
+  var bounds = event.bounds
 });
 ```
 
