@@ -101,5 +101,4 @@ var LeafletShades = L.Layer.extend({
 	}
 });
 
-
 module.exports = LeafletShades;

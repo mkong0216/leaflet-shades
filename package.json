@@ -2,11 +2,11 @@
   "name": "leaflet-shades",
   "version": "0.1.0",
   "description": "",
-  "main": "leaflet-shades.js",
+  "main": "src/js/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "watchify  ./src/js/leaflet-shades.js -o dist/leaflet-shades.js -v;",
-    "build": "browserify ./src/js/leaflet-shades.js > dist/leaflet-shades.js"
+    "dev": "watchify -t [browserify-shim --global] ./src/js/index.js -o dist/leaflet-shades.js -v;",
+    "build": "browserify -t [browserify-shim --global] ./src/js/index.js > dist/leaflet-shades.js"
   },
   "repository": {
     "type": "git",
@@ -24,11 +24,6 @@
   },
   "browserify-shim": {
     "leaflet": "global:L"
-  },
-  "browserify": {
-    "transform": [
-      "browserify-shim"
-    ]
   },
   "homepage": "https://github.com/mkong0216/leaflet-shades#readme",
   "dependencies": {

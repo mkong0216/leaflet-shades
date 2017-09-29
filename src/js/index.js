@@ -26,17 +26,18 @@
     root.LeafletShades = factory(root.L);
   }
 }(this, function (L) {
-  'use strict';
+'use strict';
+// var L = require('leaflet');
+var LeafletShades = require('./leaflet-shades');
 
-  var LeafletShades = require('./leaflet-shades');
+// Automatically attach to Leaflet's `L` namespace.
+L.LeafletShades = LeafletShades;
 
-  // Automatically attach to Leaflet's `L` namespace.
-  L.LeafletShades = LeafletShades;
-
-  L.leafletShades = function (options) {
-    return new L.LeafletShades(options);
-  };
+L.leafletShades = function(opts) {
+  return new LeafletShades(opts);
+}
 
   // Return value defines this module's export value.
   return LeafletShades;
 }));
+
