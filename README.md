@@ -38,7 +38,9 @@ map.editTools.startRectangle();
 <b> Step 4: </b> In Javascript, create your shades and add it onto your map 
 
 ```javascript
-var shades = new LeafletShades();
+var shades = new L.LeafletShades();
+// or you can do 
+// var shades = L.leafletShades();
 shades.addTo(map); 
 ```
 
