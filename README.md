@@ -104,12 +104,12 @@ This will change the left shade to become 500px by 500px at position 10px from t
 
 # Events
 
-Leaflet Shades listens to events fired by Leaflet.Editable and Leaflet. 
+Leaflet Shades listens to events fired by Leaflet.Editable (http://leaflet.github.io/Leaflet.Editable/doc/api.html) and Leaflet. 
 
-When the Leaflet.Editable geometry is resized or dragged, Leaflet Shades updates the shades' dimensions. When the Leaflet map is zoomed in/out or panned, Leaflet Shades updates the shades' dimensions as well. 
+When the Leaflet.Editable geometry is resized or dragged, firing the events `editable:vertex:dragend` and `editable:dragend`, respectively, Leaflet Shades updates the shades' dimensions. When the Leaflet map is zoomed in/out or panned, firing the event `moveend`, Leaflet Shades updates the shades' dimensions as well. 
 
 Leaflet Shades provides the event: 
-`'shades:bounds-changed'` which fires whenever shades' dimensions are updated and allow users to access the new values for the bounds of the selected region through `event.bounds`
+`shades:bounds-changed` which fires whenever shades' dimensions are updated and allow users to access the new values for the bounds of the selected region through `event.bounds`
 
 To use the `shades:bounds-changed` event to access the values of the region's bounds, you can do:
 
