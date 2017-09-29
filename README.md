@@ -71,7 +71,7 @@ var L = require('leaflet');
 require('leaflet.editable');
 require('leaflet.path.drag');
 
-// You can store a reference to the geocoder constructor in require
+// You can store a reference to the leaflet shades constructor in require
 var shades = require('leaflet-shades');
 
 // Now you can do 3 to 5 from "Basic Usage" instructions above
