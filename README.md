@@ -6,12 +6,12 @@ Leaflet shades specifically expands on the Rectange Editor of Leaflet.Editable.
 Originally, Leaflet.Editable's geometries have a blue overlay within the geometry. 
 Using Leaflet shades, the area inside the geometry now has a transparent overlay while the unselected regions have a gray overlay. This is so that the selected region can be seen while the unselected regions are slightly hidden. 
 
-<h1> Requirements </h1>
+# Requirements 
 Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the plugin and are required. 
 
 Supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6
 
-<h1> Basic Usage: </h1>
+# Basic Usage: 
 <b> Step 1: </b> In HTML, import the required Leaflet Javascript and CSS files along with the Javascript and CSS files for the leaflet-shades plugin. 
 
 ```html
@@ -48,14 +48,14 @@ shades.addTo(map);
 
 Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the finished product. 
 
-<h1> Leaflet Shades as Module </h1>
-You can also install Leaflet Shades as a module by doing:
+# Leaflet Shades as Module 
+You can also install Leaflet Shades as a module by doing: <br/>
 
 ```
 npm install leaflet-shades
 ```
 
-<h1> API Documentation: </h1>
+# API Documentation: 
 Leaflet-Shades only has one public method which is the `setDimensions(element, dimensions)` method. 
 This method takes an element and an object containing the desired dimensions for this element. 
 For example, if you wanted to manually set the dimensions for the left side of the selected region you can do this:
