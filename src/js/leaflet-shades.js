@@ -3,9 +3,9 @@ require('leaflet-editable');
 require('leaflet.path.drag');
 
 var LeafletShades = L.Layer.extend({
-
-	initialize: function(options) {
-	},
+	includes: L.Evented ? L.Evented.prototype : L.Mixin.Events,
+	// initialize: function(options) {
+	// },
 
 	onAdd: function(map) {
 		this._map = map;
@@ -28,11 +28,17 @@ var LeafletShades = L.Layer.extend({
 	},
 
 	_onBoundsChanged: function (event) {
-		var bounds = event.layer.getBounds();
-		this._updateShades(bounds);
+		var _bounds = event.layer.getBounds();
+		this.fire('shades:bounds-changed', {
+			bounds: _bounds
+		});
+		this._updateShades(_bounds);
 	}, 
 
 	_updatedMapPosition: function(event) {
+		this.fire('shades:bounds-changed', {
+			bounds: this._bounds
+		});
 		this._updateShades(this._bounds);
 	},
 

@@ -7,9 +7,11 @@ Originally, Leaflet.Editable's geometries have a blue overlay within the geometr
 Using Leaflet shades, the area inside the geometry now has a transparent overlay while the unselected regions have a gray overlay. This is so that the selected region can be seen while the unselected regions are slightly hidden. 
 
 # Requirements 
-Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the plugin and are required. 
+Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the Leaflet Shades plugin. Leaflet is required before adding Leaflet Shades.
 
-Supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6
+Leaflet Shades supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6.
+
+Leaflet.Editable syntax is also required to start drawing the rectangle as seen in the "Basic Usage" instructions step 4. 
 
 # Basic Usage: 
 <b> Step 1: </b> Clone the Leaflet Shades repository by doing:
@@ -54,6 +56,12 @@ shades.addTo(map);
 
 Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the finished product. 
 
+<b> Sidenote: </b> In Javascript, you can remove your shades from the map by doing:
+
+```javascript
+map.removeLayer(shades)
+```
+
 # Leaflet Shades as Module 
 You can also install Leaflet Shades as a module by doing: <br/>
 
@@ -66,10 +74,6 @@ And then import it into your module system. For example, with Browserify:
 ```javascript
 // Require Leaflet first
 var L = require('leaflet');
-
-// Requiring leaflet.editable and leaflet.path.drag as dependencies
-require('leaflet.editable');
-require('leaflet.path.drag');
 
 // You can store a reference to the leaflet shades constructor in require
 var shades = require('leaflet-shades');
@@ -97,4 +101,21 @@ var dimensions = {
 shades.setDimensions(shades._leftShade, dimensions);
 ```
 This will change the left shade to become 500px by 500px at position 10px from the top and 10px to the left.
+
+# Events
+
+Leaflet Shades listens to events fired by Leaflet.Editable and Leaflet. 
+
+When the Leaflet.Editable geometry is resized or dragged, Leaflet Shades updates the shades' dimensions. When the Leaflet map is zoomed in/out or panned, Leaflet Shades updates the shades' dimensions as well. 
+
+Leaflet Shades provides the event: 
+'`shades:bounds-changed`' which fires whenever shades' dimensions are updated and allow users to access the new values for the bounds of the selected region through `event.bounds`
+
+To use the `shades:bounds-changed` event to access the values of the region's bounds, you can do:
+
+```javascript 
+map.on('shades:bounds-changed', function(event) {
+	var bounds = event.bounds
+});
+```
 
