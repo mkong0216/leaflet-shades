@@ -61,6 +61,23 @@ You can also install Leaflet Shades as a module by doing: <br/>
 npm install leaflet-shades
 ```
 
+And then import it into your module system. For example, with Browserify:
+
+```javascript
+// Require Leaflet first
+var L = require('leaflet');
+
+// Requiring leaflet.editable and leaflet.path.drag as dependencies
+require('leaflet.editable');
+require('leaflet.path.drag');
+
+// You can store a reference to the geocoder constructor in require
+var shades = require('leaflet-shades');
+
+// Now you can do 3 to 5 from "Basic Usage" instructions above
+```
+
+
 # API Documentation: 
 Leaflet-Shades only has one public method which is the `setDimensions(element, dimensions)` method. 
 This method takes an element and an object containing the desired dimensions for this element. 
