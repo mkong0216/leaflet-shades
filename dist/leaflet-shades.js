@@ -2114,8 +2114,14 @@ require('leaflet.path.drag');
 
 var LeafletShades = L.Layer.extend({
 	includes: L.Evented ? L.Evented.prototype : L.Mixin.Events,
-	// initialize: function(options) {
-	// },
+
+	options: {
+		bounds: null
+	}, 
+
+	initialize: function(options) {
+		L.setOptions(this, options);
+	},
 
 	onAdd: function(map) {
 		this._map = map;
@@ -2128,6 +2134,7 @@ var LeafletShades = L.Layer.extend({
 		this._rightShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
 
 		map.getPanes().overlayPane.appendChild(this._shadesContainer);
+		if (this.options.bounds) this._updateShades(this.options.bounds)
 	},
 
 	_addEventListeners: function() {
@@ -2139,14 +2146,14 @@ var LeafletShades = L.Layer.extend({
 
 	_onBoundsChanged: function (event) {
 		var _bounds = event.layer.getBounds();
-		this.fire('bounds', {
+		this.fire('shades:bounds-changed', {
 			bounds: _bounds
 		});
 		this._updateShades(_bounds);
 	}, 
 
 	_updatedMapPosition: function(event) {
-		this.fire('bounds', {
+		this.fire('shades:bounds-changed', {
 			bounds: this._bounds
 		});
 		this._updateShades(this._bounds);
@@ -2167,6 +2174,7 @@ var LeafletShades = L.Layer.extend({
 
 	_updateShades: function (bounds) {
 		if (bounds !== this._bounds) this._bounds = bounds; 
+
 		const size = this._map.getSize();
 		const northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
 		const southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());

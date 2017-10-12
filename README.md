@@ -40,18 +40,31 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 map.setView([0,0], 5);
 ```
 
-<b> Step 4: </b> In Javascript, start drawing your rectangle using Leaflet.Editable 
+<b> Step 4: </b> In Javascript, start drawing your rectangle using Leaflet.Editable's `startRectangle()` or allow an already existing rectangle to be edited by using `enableEdit()`
+
 ```
+// Start drawing rectangle
 map.editTools.startRectangle();
+
+// Enable edit on already existing rectangle
+const rect = L.rectangle([[54.559322, -5.767822], [56.1210604, -3.021240]]).addTo(map);
+rect.enableEdit()
 ```
 
-<b> Step 5: </b> In Javascript, create your shades and add it onto your map 
+<b> Step 5a: </b> In Javascript, create your shades and add it onto your map 
 
 ```javascript
 var shades = new L.LeafletShades();
 // or you can do 
 // var shades = L.leafletShades();
 shades.addTo(map); 
+```
+
+<b> Step 5b: </b> If you want to add shades to an already existing rectangle on the map, pass the bounds of the rectangle to the Leaflet Shades constructor as an object
+
+```javascript
+// rect was previously created in step 4
+var shades = new L.LeafletShades({bounds: rect.getBounds()})
 ```
 
 Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the finished product. 
