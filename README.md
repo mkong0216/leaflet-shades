@@ -48,7 +48,7 @@ map.editTools.startRectangle();
 
 // Enable edit on already existing rectangle
 const rect = L.rectangle([[54.559322, -5.767822], [56.1210604, -3.021240]]).addTo(map);
-rect.enableEdit()
+rect.enableEdit();
 ```
 
 <b> Step 5a: </b> In Javascript, create your shades and add it onto your map 
@@ -60,11 +60,12 @@ var shades = new L.LeafletShades();
 shades.addTo(map); 
 ```
 
-<b> Step 5b: </b> If you want to add shades to an already existing rectangle on the map, pass the bounds of the rectangle to the Leaflet Shades constructor as an object
+<b> Step 5b: </b> If you want to add shades to an already existing rectangle on the map, pass the bounds of the rectangle to the Leaflet Shades constructor as an object before adding it to the map
 
 ```javascript
 // rect was previously created in step 4
-var shades = new L.LeafletShades({bounds: rect.getBounds()})
+var shades = new L.LeafletShades({bounds: rect.getBounds()});
+shades.addTo(map);
 ```
 
 Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the finished product. 
@@ -72,7 +73,7 @@ Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/ to see the f
 <b> Sidenote: </b> In Javascript, you can remove your shades from the map by doing:
 
 ```javascript
-map.removeLayer(shades)
+map.removeLayer(shades);
 ```
 
 # Leaflet Shades as Module 
