@@ -133,3 +133,4 @@ map.on('shades:bounds-changed', function(event) {
 });
 ```
 
+All events, including events from Leaflet and Leaflet Editable that Leaflet Shades listens to, can be seen in this <a href='https://mkong0216.github.io/leaflet-shades/examples/events.html'> demo </a>
