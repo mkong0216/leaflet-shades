@@ -2147,16 +2147,18 @@ var LeafletShades = L.Layer.extend({
 	_onBoundsChanged: function (event) {
 		var _bounds = event.layer.getBounds();
 		this.fire('shades:bounds-changed', {
-			bounds: _bounds
+			bounds: _bounds,
 		});
 		this._updateShades(_bounds);
 	}, 
 
 	_updatedMapPosition: function(event) {
-		this.fire('shades:bounds-changed', {
-			bounds: this._bounds
-		});
-		this._updateShades(this._bounds);
+		if (this._bounds) {
+			this.fire('shades:bounds-changed', {
+				bounds: this._bounds,
+			});
+			this._updateShades(this._bounds);
+		}
 	},
 
 	_getOffset: function() {
