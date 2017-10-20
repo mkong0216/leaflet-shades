@@ -70,6 +70,8 @@ shades.addTo(map);
 
 Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/examples to see the finished product. 
 
+Alternatively, click <a href='https://mkong0216.github.io/leaflet-shades/examples/bounds'> here </a> to see how Leaflet Shades works with an already defined rectangle. 
+
 <b> Sidenote: </b> In Javascript, you can remove your shades from the map by doing:
 
 ```javascript
