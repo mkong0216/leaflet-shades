@@ -68,9 +68,9 @@ var shades = new L.LeafletShades({bounds: rect.getBounds()});
 shades.addTo(map);
 ```
 
-Now you're done! Go to: https://mkong0216.github.io/leaflet-shades/examples to see the finished product. 
+Now you're done! <a href='https://mkong0216.github.io/leaflet-shades/examples'>Click here </a> to see the finished product. 
 
-Alternatively, click <a href='https://mkong0216.github.io/leaflet-shades/examples/bounds'> here </a> to see how Leaflet Shades works with an already defined rectangle. 
+Alternatively, <a href='https://mkong0216.github.io/leaflet-shades/examples/bounds'> click here </a> to see how Leaflet Shades works with an already defined rectangle using step 5b. 
 
 <b> Sidenote: </b> In Javascript, you can remove your shades from the map by doing:
 
