@@ -11,7 +11,7 @@ Leaflet, Leaflet.Editable, and Leaflet.Path.Drag are all embedded in the Leaflet
 
 Leaflet Shades supports Leaflet v1.2.0, Leaflet.Editable v.1.1.0, and Leaflet.Path.Drag 0.0.6.
 
-Leaflet.Editable syntax is also required to start drawing the rectangle as seen in the "Basic Usage" instructions step 4. 
+Leaflet.Editable syntax is also required to start drawing the rectangle or enable editing on an already existing rectangle as seen in the "Basic Usage" instructions step 4.
 
 # Basic Usage: 
 <b> Step 1: </b> Clone the Leaflet Shades repository by doing:
