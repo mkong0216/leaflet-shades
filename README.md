@@ -42,7 +42,7 @@ map.setView([0,0], 5);
 
 <b> Step 4: </b> In Javascript, start drawing your rectangle using Leaflet.Editable's `startRectangle()` or allow an already existing rectangle to be edited by using `enableEdit()`
 
-```
+```javascript
 // Start drawing rectangle
 map.editTools.startRectangle();
 
