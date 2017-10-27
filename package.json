@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "watchify -t [browserify-shim --global] ./src/js/index.js -o dist/leaflet-shades.js -v;",
-    "build": "browserify -t [browserify-shim --global] ./src/js/index.js > dist/leaflet-shades.js"
+    "build": "mkdir -p dist && browserify -t [browserify-shim --global] ./src/js/index.js > dist/leaflet-shades.js"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,6 @@
   },
   "homepage": "https://github.com/mkong0216/leaflet-shades#readme",
   "dependencies": {
-    "leaflet": "^1.2.0",
     "leaflet-editable": "^1.1.0",
     "leaflet.path.drag": "0.0.6"
   },
