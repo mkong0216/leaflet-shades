@@ -7,7 +7,7 @@ var LeafletShades = L.Layer.extend({
 
 	options: {
 		bounds: null
-	}, 
+	},
 
 	initialize: function(options) {
 		L.setOptions(this, options);
@@ -40,7 +40,7 @@ var LeafletShades = L.Layer.extend({
 			bounds: _bounds
 		});
 		this._updateShades(_bounds);
-	}, 
+	},
 
 	_updatedMapPosition: function(event) {
 		if (this._bounds) {
@@ -53,19 +53,19 @@ var LeafletShades = L.Layer.extend({
 
 	_getOffset: function() {
   		// Getting the transformation value through style attributes
-  		let transformation = this._map.getPanes().mapPane.style.transform
+  		var transformation = this._map.getPanes().mapPane.style.transform
   		const startIndex = transformation.indexOf('(')
   		const endIndex = transformation.indexOf(')')
   		transformation = transformation.substring(startIndex + 1, endIndex).split(',')
 		const offset = {
 			x: parseInt(transformation[0], 10) * -1,
-		    y: parseInt(transformation[1], 10) * -1 
+		    y: parseInt(transformation[1], 10) * -1
 		}
   		return offset
 	},
 
 	_updateShades: function (bounds) {
-		if (bounds !== this._bounds) this._bounds = bounds; 
+		if (bounds !== this._bounds) this._bounds = bounds;
 
 		const size = this._map.getSize();
 		const northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
