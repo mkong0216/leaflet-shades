@@ -1,6 +1,6 @@
 {
   "name": "leaflet-shades",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "src/js/index.js",
   "scripts": {
@@ -31,8 +31,8 @@
     "leaflet.path.drag": "0.0.6"
   },
   "devDependencies": {
-    "browserify": "^14.4.0",
+    "browserify": "^14.5.0",
     "browserify-shim": "^3.8.14",
-    "watchify": "^3.9.0"
+    "watchify": "^3.11.0"
   }
 }

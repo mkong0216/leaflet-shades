@@ -128,7 +128,7 @@ Leaflet Shades provides the event:
 To use the `shades:bounds-changed` event to access the values of the region's bounds, you can do:
 
 ```javascript 
-map.on('shades:bounds-changed', function(event) {
+shades.on('shades:bounds-changed', function(event) {
   var bounds = event.bounds
 });
 ```
