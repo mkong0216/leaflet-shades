@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/mkong0216/leaflet-shades#readme",
   "dependencies": {
+    "cached-path-relative": "^1.0.2",
     "leaflet-editable": "^1.1.0",
     "leaflet.path.drag": "0.0.6"
   },
