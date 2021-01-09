@@ -28,10 +28,18 @@ var LeafletShades = L.Layer.extend({
     },
 
     _addEventListeners: function () {
-        this._map.on('editable:drawing:commit', this._onBoundsChanged.bind(this));
-        this._map.on('editable:vertex:dragend', this._onBoundsChanged.bind(this));
-        this._map.on('editable:dragend', this._onBoundsChanged.bind(this));
-        this._map.on('moveend', this._updatedMapPosition.bind(this));
+        this._mapEvents = {
+            'editable:drawing:commit': this._onBoundsChanged.bind(this),
+            'editable:vertex:dragend': this._onBoundsChanged.bind(this),
+            'editable:dragend': this._onBoundsChanged.bind(this),
+            'moveend': this._updatedMapPosition.bind(this)
+        };
+
+        for (const type in this._mapEvents) {
+            if (Object.hasOwnProperty.call(this._mapEvents, type)) {
+                this._map.on(type, this._mapEvents[type]);
+            }
+        }
     },
 
     _onBoundsChanged: function (event) {
@@ -110,10 +118,12 @@ var LeafletShades = L.Layer.extend({
 
     onRemove: function (map) {
         map.getPanes().overlayPane.removeChild(this._shadesContainer);
-        map.off('editable:drawing:commit', this._onBoundsChanged.bind(this));
-        map.off('editable:vertex:dragend', this._onBoundsChanged.bind(this));
-        map.off('editable:dragend', this._onBoundsChanged.bind(this));
-        map.off('moveend', this._updatedMapPosition.bind(this));
+
+        for (const type in this._mapEvents) {
+            if (Object.hasOwnProperty.call(this._mapEvents, type)) {
+                this._map.off(type, this._mapEvents[type]);
+            }
+        }
     }
 });
 
