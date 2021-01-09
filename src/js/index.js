@@ -27,7 +27,6 @@
   }
 }(this, function (L) {
 'use strict';
-// var L = require('leaflet');
 var LeafletShades = require('./leaflet-shades');
 
 // Automatically attach to Leaflet's `L` namespace.
