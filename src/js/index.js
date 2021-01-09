@@ -7,7 +7,7 @@
  * (c) Mandy Kong
  */
 
-(function (root, factory) { // eslint-disable-line no-extra-semi
+(function (root, factory) {
     var L;
 
     if (typeof define === 'function' && define.amd) {
