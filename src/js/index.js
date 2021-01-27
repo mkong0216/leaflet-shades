@@ -7,37 +7,38 @@
  * (c) Mandy Kong
  */
 
-(function (root, factory) { // eslint-disable-line no-extra-semi
-  var L;
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['leaflet'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
-    L = require('leaflet');
-    module.exports = factory(L);
-  } else {
-    // Browser globals (root is window)
-    if (typeof root.L === 'undefined') {
-      throw new Error('Leaflet must be loaded first');
+(function (root, factory) {
+    var L;
+
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['leaflet'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        L = require('leaflet');
+        module.exports = factory(L);
+    } else {
+        // Browser globals (root is window)
+        if (typeof root.L === 'undefined') {
+            throw new Error('Leaflet must be loaded first');
+        }
+
+        root.LeafletShades = factory(root.L);
     }
-    root.LeafletShades = factory(root.L);
-  }
 }(this, function (L) {
-'use strict';
-// var L = require('leaflet');
-var LeafletShades = require('./leaflet-shades');
+    'use strict';
 
-// Automatically attach to Leaflet's `L` namespace.
-L.LeafletShades = LeafletShades;
+    var LeafletShades = require('./leaflet-shades');
 
-L.leafletShades = function(opts) {
-  return new LeafletShades(opts);
-}
+    // Automatically attach to Leaflet's `L` namespace.
+    L.LeafletShades = LeafletShades;
 
-  // Return value defines this module's export value.
-  return LeafletShades;
+    L.leafletShades = function (opts) {
+        return new LeafletShades(opts);
+    }
+
+    // Return value defines this module's export value.
+    return LeafletShades;
 }));
-

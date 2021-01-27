@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){
 'use strict';
 (function (factory, window) {
@@ -152,7 +152,7 @@
         },
 
         createVertexIcon: function (options) {
-            return L.Browser.touch ? new L.Editable.TouchVertexIcon(options) : new L.Editable.VertexIcon(options);
+            return L.Browser.mobile && L.Browser.touch ? new L.Editable.TouchVertexIcon(options) : new L.Editable.VertexIcon(options);
         },
 
         createEditLayer: function () {
@@ -253,6 +253,7 @@
         },
 
         onMousedown: function (e) {
+            if (e.originalEvent.which != 1) return;
             this._mouseDown = e;
             this._drawingEditor.onDrawingMouseDown(e);
         },
@@ -422,7 +423,7 @@
         editable: false,
 
         // 🍂option editOptions: hash = {}
-        // Options to pass to L.Editable when instanciating.
+        // Options to pass to L.Editable when instantiating.
         editOptions: {}
 
     });
@@ -489,6 +490,8 @@
             this.on('click', this.onClick);
             this.on('contextmenu', this.onContextMenu);
             this.on('mousedown touchstart', this.onMouseDown);
+            this.on('mouseover', this.onMouseOver);
+            this.on('mouseout', this.onMouseOut);
             this.addMiddleMarkers();
         },
 
@@ -502,6 +505,8 @@
             this.off('click', this.onClick);
             this.off('contextmenu', this.onContextMenu);
             this.off('mousedown touchstart', this.onMouseDown);
+            this.off('mouseover', this.onMouseOver);
+            this.off('mouseout', this.onMouseOut);
             L.Marker.prototype.onRemove.call(this, map);
         },
 
@@ -547,6 +552,16 @@
         onMouseDown: function (e) {
             e.vertex = this;
             this.editor.onVertexMarkerMouseDown(e);
+        },
+
+        onMouseOver: function (e) {
+            e.vertex = this;
+            this.editor.onVertexMarkerMouseOver(e);
+        },
+
+        onMouseOut: function (e) {
+            e.vertex = this;
+            this.editor.onVertexMarkerMouseOut(e);
         },
 
         // 🍂method delete()
@@ -774,7 +789,6 @@
             else this.feature.once('add', this.onFeatureAdd, this);
             this.onEnable();
             this.feature.on(this._getEvents(), this);
-            return;
         },
 
         // 🍂method disable(): this
@@ -786,7 +800,6 @@
             this.tools.editLayer.removeLayer(this.editLayer);
             this.onDisable();
             if (this._drawing) this.cancelDrawing();
-            return;
         },
 
         // 🍂method drawing(): boolean
@@ -925,7 +938,7 @@
             return this.map.hasLayer(this.feature);
         },
 
-        connect: function (e) {
+        connect: function () {
             this.tools.connectCreatedToMap(this.feature);
             this.tools.editLayer.addLayer(this.editLayer);
         },
@@ -1171,6 +1184,22 @@
             this.fireAndForward('editable:vertex:mousedown', e);
         },
 
+        onVertexMarkerMouseOver: function (e) {
+            // 🍂namespace Editable
+            // 🍂section Vertex events
+            // 🍂event editable:vertex:mouseover: VertexEvent
+            // Fired when a user's mouse enters the vertex
+            this.fireAndForward('editable:vertex:mouseover', e);
+        },
+
+        onVertexMarkerMouseOut: function (e) {
+            // 🍂namespace Editable
+            // 🍂section Vertex events
+            // 🍂event editable:vertex:mouseout: VertexEvent
+            // Fired when a user's mouse leaves the vertex
+            this.fireAndForward('editable:vertex:mouseout', e);
+        },
+
         onMiddleMarkerMouseDown: function (e) {
             // 🍂namespace Editable
             // 🍂section MiddleMarker events
@@ -1250,7 +1279,7 @@
         // 🍂method push()
         // Programmatically add a point while drawing.
         push: function (latlng) {
-            if (!latlng) return console.error('L.Editable.PathEditor.push expect a vaild latlng as parameter');
+            if (!latlng) return console.error('L.Editable.PathEditor.push expect a valid latlng as parameter');
             if (this._drawing === L.Editable.FORWARD) this.newPointForward(latlng);
             else this.newPointBackward(latlng);
         },
@@ -1604,7 +1633,7 @@
             e.originalEvent._simulated = false;
             this.map.dragging._draggable._onUp(e.originalEvent);
             // Now transfer ongoing drag action to the bottom right corner.
-            // Should we refine which corne will handle the drag according to
+            // Should we refine which corner will handle the drag according to
             // drag direction?
             latlngs[3].__vertex.dragging._draggable._onDown(e.originalEvent);
         },
@@ -1635,7 +1664,7 @@
             // Keep references.
             for (var i = 0; i < latlngs.length; i++) {
                 latlngs[i].update(newLatlngs[i]);
-            };
+            }
         }
 
     });
@@ -1682,7 +1711,7 @@
         },
 
         resize: function (e) {
-            var radius = this.feature._latlng.distanceTo(e.latlng)
+            var radius = this.feature._latlng.distanceTo(e.latlng);
             this.feature.setRadius(radius);
         },
 
@@ -1726,7 +1755,7 @@
         createEditor: function (map) {
             map = map || this._map;
             var tools = (this.options.editOptions || {}).editTools || map.editTools;
-            if (!tools) throw Error('Unable to detect Editable instance.')
+            if (!tools) throw Error('Unable to detect Editable instance.');
             var Klass = this.options.editorClass || this.getEditorClass(tools);
             return new Klass(map, this, this.options.editOptions);
         },
@@ -2070,41 +2099,41 @@ L.Path.addInitHook(function () {
  * (c) Mandy Kong
  */
 
-(function (root, factory) { // eslint-disable-line no-extra-semi
-  var L;
-  if (typeof define === 'function' && define.amd) {
-    // AMD. Register as an anonymous module.
-    define(['leaflet'], factory);
-  } else if (typeof module === 'object' && module.exports) {
-    // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like environments that support module.exports,
-    // like Node.
-    L = (typeof window !== "undefined" ? window['L'] : typeof global !== "undefined" ? global['L'] : null);
-    module.exports = factory(L);
-  } else {
-    // Browser globals (root is window)
-    if (typeof root.L === 'undefined') {
-      throw new Error('Leaflet must be loaded first');
+(function (root, factory) {
+    var L;
+
+    if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
+        define(['leaflet'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        // Node. Does not work with strict CommonJS, but
+        // only CommonJS-like environments that support module.exports,
+        // like Node.
+        L = (typeof window !== "undefined" ? window['L'] : typeof global !== "undefined" ? global['L'] : null);
+        module.exports = factory(L);
+    } else {
+        // Browser globals (root is window)
+        if (typeof root.L === 'undefined') {
+            throw new Error('Leaflet must be loaded first');
+        }
+
+        root.LeafletShades = factory(root.L);
     }
-    root.LeafletShades = factory(root.L);
-  }
 }(this, function (L) {
-'use strict';
-// var L = require('leaflet');
-var LeafletShades = require('./leaflet-shades');
+    'use strict';
 
-// Automatically attach to Leaflet's `L` namespace.
-L.LeafletShades = LeafletShades;
+    var LeafletShades = require('./leaflet-shades');
 
-L.leafletShades = function(opts) {
-  return new LeafletShades(opts);
-}
+    // Automatically attach to Leaflet's `L` namespace.
+    L.LeafletShades = LeafletShades;
 
-  // Return value defines this module's export value.
-  return LeafletShades;
+    L.leafletShades = function (opts) {
+        return new LeafletShades(opts);
+    }
+
+    // Return value defines this module's export value.
+    return LeafletShades;
 }));
-
-
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./leaflet-shades":4}],4:[function(require,module,exports){
 (function (global){
@@ -2113,118 +2142,128 @@ require('leaflet-editable');
 require('leaflet.path.drag');
 
 var LeafletShades = L.Layer.extend({
-	includes: L.Evented ? L.Evented.prototype : L.Mixin.Events,
+    includes: L.Evented ? L.Evented.prototype : L.Mixin.Events,
 
-	options: {
-		bounds: null
-	}, 
+    options: {
+        bounds: null
+    },
 
-	initialize: function(options) {
-		L.setOptions(this, options);
-	},
+    initialize: function (options) {
+        L.setOptions(this, options);
+    },
 
-	onAdd: function(map) {
-		this._map = map;
-		this._addEventListeners();
+    onAdd: function (map) {
+        this._map = map;
+        this._addEventListeners();
 
-		this._shadesContainer = L.DomUtil.create('div', 'leaflet-areaselect-container leaflet-zoom-hide');
-		this._topShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
-		this._bottomShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
-		this._leftShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
-		this._rightShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
+        this._shadesContainer = L.DomUtil.create('div', 'leaflet-areaselect-container leaflet-zoom-hide');
+        this._topShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
+        this._bottomShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
+        this._leftShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
+        this._rightShade = L.DomUtil.create('div', 'leaflet-areaselect-shade', this._shadesContainer);
 
-		map.getPanes().overlayPane.appendChild(this._shadesContainer);
-		if (this.options.bounds) this._updateShades(this.options.bounds)
-	},
+        map.getPanes().overlayPane.appendChild(this._shadesContainer);
+        if (this.options.bounds) this._updateShades(this.options.bounds)
+    },
 
-	_addEventListeners: function() {
-		this._map.on('editable:drawing:commit', this._onBoundsChanged.bind(this));
-		this._map.on('editable:vertex:dragend', this._onBoundsChanged.bind(this));
-  		this._map.on('editable:dragend', this._onBoundsChanged.bind(this));
-  		this._map.on('moveend', this._updatedMapPosition.bind(this));
-	},
+    _addEventListeners: function () {
+        this._mapEvents = {
+            'editable:drawing:commit': this._onBoundsChanged.bind(this),
+            'editable:vertex:dragend': this._onBoundsChanged.bind(this),
+            'editable:dragend': this._onBoundsChanged.bind(this),
+            'moveend': this._updatedMapPosition.bind(this)
+        };
 
-	_onBoundsChanged: function (event) {
-		var _bounds = event.layer.getBounds();
-		this.fire('shades:bounds-changed', {
-			bounds: _bounds
-		});
-		this._updateShades(_bounds);
-	}, 
+        for (const type in this._mapEvents) {
+            if (Object.hasOwnProperty.call(this._mapEvents, type)) {
+                this._map.on(type, this._mapEvents[type]);
+            }
+        }
+    },
 
-	_updatedMapPosition: function(event) {
-		if (this._bounds) {
-			this.fire('shades:bounds-changed', {
-				bounds: this._bounds
-			});
-			this._updateShades(this._bounds);
-		}
-	},
+    _onBoundsChanged: function (event) {
+        var _bounds = event.layer.getBounds();
+        this.fire('shades:bounds-changed', {
+            bounds: _bounds
+        });
+        this._updateShades(_bounds);
+    },
 
-	_getOffset: function() {
-  		// Getting the transformation value through style attributes
-  		let transformation = this._map.getPanes().mapPane.style.transform
-  		const startIndex = transformation.indexOf('(')
-  		const endIndex = transformation.indexOf(')')
-  		transformation = transformation.substring(startIndex + 1, endIndex).split(',')
-		const offset = {
-			x: parseInt(transformation[0], 10) * -1,
-		    y: parseInt(transformation[1], 10) * -1 
-		}
-  		return offset
-	},
+    _updatedMapPosition: function (event) {
+        if (this._bounds) {
+            this.fire('shades:bounds-changed', {
+                bounds: this._bounds
+            });
+            this._updateShades(this._bounds);
+        }
+    },
 
-	_updateShades: function (bounds) {
-		if (bounds !== this._bounds) this._bounds = bounds; 
+    _getOffset: function () {
+        // Getting the transformation value through style attributes
+        var transformation = this._map.getPanes().mapPane.style.transform
+        const startIndex = transformation.indexOf('(')
+        const endIndex = transformation.indexOf(')')
+        transformation = transformation.substring(startIndex + 1, endIndex).split(',')
+        const offset = {
+            x: parseInt(transformation[0], 10) * -1,
+            y: parseInt(transformation[1], 10) * -1
+        }
+        return offset
+    },
 
-		const size = this._map.getSize();
-		const northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
-		const southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());
-		const offset = this._getOffset();
+    _updateShades: function (bounds) {
+        if (bounds !== this._bounds) this._bounds = bounds;
 
-		this.setDimensions(this._topShade, {
-		    width: size.x,
-		    height: (northEastPoint.y < 0) ? 0 : northEastPoint.y,
-		    top: offset.y,
-		    left: offset.x
-	  	})
+        const size = this._map.getSize();
+        const northEastPoint = this._map.latLngToContainerPoint(bounds.getNorthEast());
+        const southWestPoint = this._map.latLngToContainerPoint(bounds.getSouthWest());
+        const offset = this._getOffset();
 
-	  	this.setDimensions(this._bottomShade, {
-		    width: size.x,
-		    height: size.y - southWestPoint.y,
-		    top: southWestPoint.y + offset.y,
-		    left: offset.x
-		})
+        this.setDimensions(this._topShade, {
+            width: size.x,
+            height: (northEastPoint.y < 0) ? 0 : northEastPoint.y,
+            top: offset.y,
+            left: offset.x
+        })
 
-		this.setDimensions(this._leftShade, {
-		    width: (southWestPoint.x < 0) ? 0 : southWestPoint.x,
-		    height: southWestPoint.y - northEastPoint.y,
-		    top: northEastPoint.y + offset.y,
-		    left: offset.x
-		})
+        this.setDimensions(this._bottomShade, {
+            width: size.x,
+            height: size.y - southWestPoint.y,
+            top: southWestPoint.y + offset.y,
+            left: offset.x
+        })
 
-		this.setDimensions(this._rightShade, {
-		    width: size.x - northEastPoint.x,
-		    height: southWestPoint.y - northEastPoint.y,
-		    top: northEastPoint.y + offset.y,
-		    left: northEastPoint.x + offset.x
-		})
-	},
+        this.setDimensions(this._leftShade, {
+            width: (southWestPoint.x < 0) ? 0 : southWestPoint.x,
+            height: southWestPoint.y - northEastPoint.y,
+            top: northEastPoint.y + offset.y,
+            left: offset.x
+        })
 
-	setDimensions: function(element, dimensions) {
-		element.style.width = dimensions.width + 'px';
-		element.style.height = dimensions.height + 'px';
-		element.style.top = dimensions.top + 'px';
-		element.style.left = dimensions.left + 'px';
-	},
+        this.setDimensions(this._rightShade, {
+            width: size.x - northEastPoint.x,
+            height: southWestPoint.y - northEastPoint.y,
+            top: northEastPoint.y + offset.y,
+            left: northEastPoint.x + offset.x
+        })
+    },
 
-	onRemove: function(map) {
-		map.getPanes().overlayPane.removeChild(this._shadesContainer);
-		map.off('editable:drawing:commit', this._onBoundsChanged.bind(this));
-		map.off('editable:vertex:dragend', this._onBoundsChanged.bind(this));
-  		map.off('editable:dragend', this._onBoundsChanged.bind(this));
-  		map.off('moveend', this._updatedMapPosition.bind(this));
-	}
+    setDimensions: function (element, dimensions) {
+        element.style.width = dimensions.width + 'px';
+        element.style.height = dimensions.height + 'px';
+        element.style.top = dimensions.top + 'px';
+        element.style.left = dimensions.left + 'px';
+    },
+
+    onRemove: function (map) {
+        map.getPanes().overlayPane.removeChild(this._shadesContainer);
+
+        for (const type in this._mapEvents) {
+            if (Object.hasOwnProperty.call(this._mapEvents, type)) {
+                this._map.off(type, this._mapEvents[type]);
+            }
+        }
+    }
 });
 
 module.exports = LeafletShades;
